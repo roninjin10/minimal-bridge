@@ -134,7 +134,7 @@ export const actionUsageExample = async () => {
 // 1. User can make multiple clients if they are using multiple chains. This totally fine and IMO actually cleaner than passing l2ChainId every usage
 // 2. Most users will have a single op chain. For them they get a simpler hook with less boilerplate
 // 3. They can still override the address if they choose to
-export const opViemExtension = <TConfig extends OpStackConfig>(config: TConfig) => {
+export const opViemExtension = <TConfig extends OpStackConfig>(configs: TConfig[]) => {
   return <
     TTransport extends Transport = Transport,
     TAccount extends Account = Account,
@@ -143,10 +143,10 @@ export const opViemExtension = <TConfig extends OpStackConfig>(config: TConfig) 
     TChain extends Chain & { id: TL1ChainId } = Chain & { id: TL1ChainId },
   > // this type could be even stricter but gonna keep it simple so it's easier to follow
     (client: WalletClient<TTransport, TChain, TAccount>) => {
-    if (client.chain.id !== config.l1.chainId) {
+    if (configs.some(config => client.chain.id !== config.l1.chainId)) {
       throw new ChainMismatchError({
         activeChain: client.chain.name,
-        targetChain: (config as any).chain.name
+        targetChain: configs.map(config => config.l1.chainId).join(','),
       })
     }
     // here we can provide that good ux of not needing to provide contract addresses. User simply needs to configure them once in their entire app
@@ -165,8 +165,15 @@ export const opViemExtension = <TConfig extends OpStackConfig>(config: TConfig) 
           >
           & {
             l1StandardBridge?: Address
+            chainId: number
           },
       ) => {
+        // we could make the api clever and not require chainId if only one rollup config is passed in
+        // This is overly clever though IMO
+        const config = configs.find(config => config.l1.chainId === args.chainId)
+        if (!config) {
+          throw new Error(`No config found for chainId ${args.chainId}`)
+        }
         return writeDepositETH(client, {
           l1StandardBridge: config.l1.contracts.l1StandardBridge.address,
           ...args,
@@ -182,7 +189,7 @@ export const opViemExtensionUsageExample = async () => {
   const client: WalletClient<any, typeof mainnet, Account> = {} as any
 
   const opClient = client.extend(
-    opViemExtension(optimismConfig),
+    opViemExtension([optimismConfig]),
   )
 
   // don't need to provide contract address nor chain id because it was configured in the constructor
@@ -190,5 +197,6 @@ export const opViemExtensionUsageExample = async () => {
     // passing in minGasLimit sucks so we should encourage folks to use the prepare hooks
     minGasLimit: 420n,
     value: 420n,
+    chainId: optimism.id
   })
 }
