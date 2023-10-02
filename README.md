@@ -1,46 +1,69 @@
-# Getting Started with Create React App
+<br/>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+  <a href="https://op-viem-site.vercel.app/">
+  <h1>OP Viem</h1>
+  </a>
+</p>
 
-## Available Scripts
+<p align="center">
+  Viem Extension for OP Stack Chains
+<p>
 
-In the project directory, you can run:
+<br>
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Simplifies cross L1 & L2 interactions
+- Seamless extension to [Viem](https://github.com/wagmi-dev/viem)
+- TypeScript ready
+- Test suite running against [forked](https://ethereum.org/en/glossary/#fork) Ethereum network
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Overview
 
-### `npm test`
+```ts
+// import modules
+import { createWalletClient, createPublicClient, custom, http } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { mainnet, base } from 'viem/chains'
+import { walletL1OpStackActions, publicL1OpStackActions, publicL2OpStackActions } from 'op-viem'
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+// create clients
+export const opStackL1WalletClient = createWalletClient({
+  chain: mainnet,
+  transport: custom(window.ethereum)
+}).extend(walletL1OpStackActions)
 
-### `npm run build`
+export const opStackL1PublicClient = createPublicClient({
+  chain: mainnet,
+  transport: http()
+}).extend(publicL1OpStackActions)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export const opStackL2PublicClient = createPublicClient({
+  chain: base,
+  transport: http()
+}).extend(publicL2OpStackActions)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+// perform an action
+opStackL1PublicClient.getOutputForL2Block(blockNumber: 2725977n, l2Chain: base)
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Community
 
-### `npm run eject`
+Check out the following places for more viem-related content:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- Follow [@wilsoncuask](https://twitter.com/wilsoncuask) Twitter for project updates
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+If you're interested in contributing, please read the [contributing docs](CONTRIBUTING.md) **before submitting a pull request**.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Authors
 
-## Learn More
+- [@wilsoncusack](https://github.com/wilsoncusack) (wilsoncusack.eth [Twitter](https://twitter.com/wilsoncusack))
+- [@zencephalon](https://github.com/zencephalon) (zencephalon.eth, [Twitter](https://twitter.com/zencephalon))
+- [@roninjin10](https://github.com/roninjin10) (fucory.eth, [Twitter](https://twitter.com/FUCORY))
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## License
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+[MIT](LICENSE.md) License

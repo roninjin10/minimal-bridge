@@ -1,0 +1,16 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "op-viem": "0.0.0",
+    "@op-viem/site": "0.0.0"
+  },
+  "changesets": [
+    "big-pants-shout",
+    "brave-donuts-kick",
+    "happy-books-burn",
+    "hip-lies-remain",
+    "nice-vans-approve",
+    "soft-wolves-admire"
+  ]
+}
