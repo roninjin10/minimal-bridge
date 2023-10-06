@@ -1,6 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img width="260" alt="image" src="https://github.com/roninjin10/minimal-bridge/assets/35039927/c390f3c5-022c-410b-896c-16842c6ecad2">
 
 ## Available Scripts
 
