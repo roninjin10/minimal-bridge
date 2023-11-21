@@ -10,7 +10,7 @@ const withdrawal: FinalizeWithdrawalTransactionParameters = {
   data: '0x01',
 }
 
-const hash = await opStackL1WalletClient.writeFinalizeWithdrawalTranasction({
+const hash = await opStackL1WalletClient.writeFinalizeWithdrawalTransaction({
   portal: baseAddresses.portal,
   args: { withdrawal },
   account,
